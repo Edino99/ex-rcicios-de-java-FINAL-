@@ -1,0 +1,56 @@
+import java.util.PriorityQueue;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
+
+public class Ex2 {
+
+    static class Node {
+        int value;
+        int listIndex;
+        int elementIndex;
+
+        Node(int v, int li, int ei) {
+            value = v;
+            listIndex = li;
+            elementIndex = ei;
+        }
+    }
+
+    public static List<Integer> mergeKSortedLists(List<List<Integer>> lists) {
+
+        PriorityQueue<Node> minHeap = new PriorityQueue<>(
+            Comparator.comparingInt(a -> a.value)
+        );
+
+        // Inserir o primeiro elemento de cada lista
+        for (int i = 0; i < lists.size(); i++) {
+            if (!lists.get(i).isEmpty()) {
+                minHeap.add(new Node(
+                    lists.get(i).get(0),
+                    i,
+                    0
+                ));
+            }
+        }
+
+        List<Integer> result = new ArrayList<>();
+
+        while (!minHeap.isEmpty()) {
+            Node node = minHeap.poll();
+            result.add(node.value);
+
+            int nextIndex = node.elementIndex + 1;
+
+            if (nextIndex < lists.get(node.listIndex).size()) {
+                minHeap.add(new Node(
+                    lists.get(node.listIndex).get(nextIndex),
+                    node.listIndex,
+                    nextIndex
+                ));
+            }
+        }
+
+        return result;
+    }
+}
