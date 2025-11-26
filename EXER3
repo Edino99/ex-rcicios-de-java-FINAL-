@@ -1,0 +1,58 @@
+import java.util.PriorityQueue;
+import java.util.HashMap;
+import java.util.Comparator;
+
+public class DualPriorityQueue {
+
+    private PriorityQueue<Integer> minHeap;
+    private PriorityQueue<Integer> maxHeap;
+    private HashMap<Integer, Integer> removed;
+
+    public DualPriorityQueue() {
+        minHeap = new PriorityQueue<>();
+        maxHeap = new PriorityQueue<>(Comparator.reverseOrder());
+        removed = new HashMap<>();
+    }
+
+    private void lazyRemove(PriorityQueue<Integer> heap) {
+        while (!heap.isEmpty()) {
+            int x = heap.peek();
+
+            if (removed.getOrDefault(x, 0) > 0) {
+                removed.put(x, removed.get(x) - 1);
+                heap.poll();
+            } else {
+                break;
+            }
+        }
+    }
+
+    public void insert(int value) {
+        minHeap.add(value);
+        maxHeap.add(value);
+    }
+
+    public Integer getMax() {
+        lazyRemove(maxHeap);
+        return maxHeap.peek();
+    }
+
+    public Integer getMin() {
+        lazyRemove(minHeap);
+        return minHeap.peek();
+    }
+
+    public Integer removeMax() {
+        lazyRemove(maxHeap);
+        int x = maxHeap.poll();
+        removed.put(x, removed.getOrDefault(x, 0) + 1);
+        return x;
+    }
+
+    public Integer removeMin() {
+        lazyRemove(minHeap);
+        int x = minHeap.poll();
+        removed.put(x, removed.getOrDefault(x, 0) + 1);
+        return x;
+    }
+}
