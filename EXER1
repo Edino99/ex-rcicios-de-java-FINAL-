@@ -1,0 +1,24 @@
+import java.util.PriorityQueue;
+
+public class Ex1 {
+
+    public static int[] findKthLargest(int[] arr, int k) {
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+
+        for (int num : arr) {
+            minHeap.add(num);
+            if (minHeap.size() > k) {
+                minHeap.poll();
+            }
+        }
+
+        int[] result = new int[k];
+        int index = k - 1;
+
+        while (!minHeap.isEmpty()) {
+            result[index--] = minHeap.poll();
+        }
+
+        return result;
+    }
+}
